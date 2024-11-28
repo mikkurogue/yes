@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
+	"gengine/shaders"
 	"log"
 	"math/rand"
 	"runtime"
-	"strings"
 	"time"
 
 	"github.com/go-gl/gl/v4.5-core/gl"
@@ -47,11 +46,6 @@ const (
 )
 
 var (
-	triangle = []float32{
-		-0.5, 0.5, 0, // top
-		-0.5, -0.5, 0, // left
-		0.5, -0.5, 0, // right
-	}
 	square = []float32{
 		-0.5, 0.5, 0,
 		-0.5, -0.5, 0,
@@ -116,12 +110,12 @@ func initOpenGL() uint32 {
 	version := gl.GoStr(gl.GetString(gl.VERSION))
 	log.Println("opengl version", version)
 
-	vertexShader, err := compileShader(vertexShaderSource, gl.VERTEX_SHADER)
+	vertexShader, err := shaders.CompileShader(vertexShaderSource, gl.VERTEX_SHADER)
 	if err != nil {
 		panic(err)
 	}
 
-	fragmentShader, err := compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER)
+	fragmentShader, err := shaders.CompileShader(fragmentShaderSource, gl.FRAGMENT_SHADER)
 	if err != nil {
 		panic(err)
 	}
@@ -161,29 +155,6 @@ func makeVao(points []float32) uint32 {
 	gl.VertexAttribPointer(0, 3, gl.FLOAT, false, 0, nil)
 
 	return vao
-}
-
-func compileShader(source string, shaderType uint32) (uint32, error) {
-	shader := gl.CreateShader(shaderType)
-
-	csources, free := gl.Strs(source)
-	gl.ShaderSource(shader, 1, csources, nil)
-	free()
-	gl.CompileShader(shader)
-
-	var status int32
-	gl.GetShaderiv(shader, gl.COMPILE_STATUS, &status)
-	if status == gl.FALSE {
-		var logLen int32
-		gl.GetShaderiv(shader, gl.INFO_LOG_LENGTH, &logLen)
-
-		log := strings.Repeat("\x00", int(logLen+1))
-		gl.GetShaderInfoLog(shader, logLen, nil, gl.Str(log))
-
-		return 0, fmt.Errorf("failed to compile shader %v: %v", source, log)
-	}
-
-	return shader, nil
 }
 
 func makeCells() [][]*cell {
