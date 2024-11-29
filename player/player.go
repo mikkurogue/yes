@@ -17,7 +17,6 @@ type Player struct {
 func (p *Player) Spawn() {
 	p.Position = rl.Vector2{float32(ScreenWidth / 2), float32(ScreenHeight * 7 / 8)}
 	p.Size = rl.Vector2{float32(ScreenWidth / 10), 20}
-
 }
 
 func (p *Player) Move() {
