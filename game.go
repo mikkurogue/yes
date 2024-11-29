@@ -2,6 +2,7 @@ package main
 
 import (
 	"gengine/constants"
+	"gengine/enemy"
 	"gengine/player"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -10,6 +11,7 @@ import (
 type Game struct {
 	pause  bool
 	player player.Player
+	enemy  enemy.Enemy
 }
 
 func NewGame() (g Game) {
@@ -19,6 +21,7 @@ func NewGame() (g Game) {
 
 func (g *Game) Init() {
 	g.player.Spawn()
+	g.enemy.Spawn()
 }
 
 var projectiles []player.Projectile
@@ -57,11 +60,19 @@ func (g *Game) Draw() {
 	rl.ClearBackground(rl.White)
 
 	if !g.pause {
+		// Draw player
 		rl.DrawRectangle(
 			int32(g.player.Position.X-g.player.Size.X/2),
 			int32(g.player.Position.Y-g.player.Size.Y/2),
 			int32(g.player.Size.X),
 			int32(g.player.Size.X), rl.DarkPurple,
+		)
+
+		// Draw enemy
+		rl.DrawCircleV(
+			g.enemy.Position,
+			25,
+			rl.DarkGreen,
 		)
 
 		// Draw each projectile

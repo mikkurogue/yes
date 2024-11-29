@@ -8,10 +8,13 @@ import (
 
 type Player struct {
 	Position, Size rl.Vector2
-	Life           int
+	Health         int
 }
 
 func (p *Player) Spawn() {
+
+	p.Health = 100.0
+
 	p.Position = rl.Vector2{
 		X: float32(constants.ScreenWidth / 2),
 		Y: float32(constants.ScreenHeight * 7 / 8),
