@@ -1,14 +1,10 @@
 package main
 
 import (
+	"gengine/constants"
 	"gengine/player"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
-)
-
-const (
-	ScreenWidth  = 800
-	ScreenHeight = 640
 )
 
 type Game struct {
@@ -77,7 +73,7 @@ func (g *Game) Draw() {
 	}
 
 	if g.pause {
-		rl.DrawText("GAME PAUSED", ScreenWidth/2-rl.MeasureText("GAME PAUSED", 40)/2, ScreenHeight/2+ScreenHeight/4-40, 40, rl.Gray)
+		rl.DrawText("GAME PAUSED", constants.ScreenWidth/2-rl.MeasureText("GAME PAUSED", 40)/2, constants.ScreenHeight/2+constants.ScreenHeight/4-40, 40, rl.Gray)
 	}
 
 	rl.EndDrawing()

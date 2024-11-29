@@ -1,12 +1,9 @@
 package player
 
 import (
-	rl "github.com/gen2brain/raylib-go/raylib"
-)
+	"gengine/constants"
 
-const (
-	ScreenWidth  = 800
-	ScreenHeight = 640
+	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 type Player struct {
@@ -15,8 +12,14 @@ type Player struct {
 }
 
 func (p *Player) Spawn() {
-	p.Position = rl.Vector2{float32(ScreenWidth / 2), float32(ScreenHeight * 7 / 8)}
-	p.Size = rl.Vector2{float32(ScreenWidth / 10), 20}
+	p.Position = rl.Vector2{
+		X: float32(constants.ScreenWidth / 2),
+		Y: float32(constants.ScreenHeight * 7 / 8),
+	}
+	p.Size = rl.Vector2{
+		X: float32(constants.ScreenWidth / 10),
+		Y: 20.0,
+	}
 }
 
 func (p *Player) Move() {
