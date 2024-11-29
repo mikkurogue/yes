@@ -19,6 +19,10 @@ func (p *Projectile) Init(position, direction rl.Vector2) {
 	p.Lifetime = 2.0 // spawn for 2 seconds
 }
 
+func (p *Projectile) Draw() {
+	rl.DrawCircleV(p.Position, 5, rl.Red)
+}
+
 // Move the projectile in the p.Direction with the speed of p.Speed
 func (p *Projectile) Move(deltaTime float32) {
 	if p.Spawned {

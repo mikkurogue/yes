@@ -1,6 +1,7 @@
 package enemy
 
 import (
+	"fmt"
 	"gengine/constants"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -9,6 +10,18 @@ import (
 type Enemy struct {
 	Health         float32
 	Position, Size rl.Vector2
+}
+
+func (e *Enemy) Update() {
+	fmt.Println("NYI: ENEMY UPDATE FUNC")
+}
+
+func (e *Enemy) Draw() {
+	rl.DrawCircleV(
+		e.Position,
+		25,
+		rl.DarkGreen,
+	)
 }
 
 func (e *Enemy) Spawn() {

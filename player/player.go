@@ -25,6 +25,21 @@ func (p *Player) Spawn() {
 	}
 }
 
+func (p *Player) Update() {
+	p.Move()
+}
+
+func (p *Player) Draw() {
+	// Draw player
+	rl.DrawRectangle(
+		int32(p.Position.X-p.Size.X/2),
+		int32(p.Position.Y-p.Size.Y/2),
+		int32(p.Size.X),
+		int32(p.Size.X), rl.DarkPurple,
+	)
+
+}
+
 func (p *Player) Move() {
 
 	if rl.IsKeyDown(rl.KeyLeft) || rl.IsKeyDown(rl.KeyA) {

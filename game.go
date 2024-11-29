@@ -35,7 +35,7 @@ func (g *Game) Update() {
 			g.pause = !g.pause
 		}
 
-		g.player.Move()
+		g.player.Update()
 
 		if rl.IsKeyPressed(rl.KeySpace) {
 			projectile := player.Projectile{}
@@ -60,25 +60,13 @@ func (g *Game) Draw() {
 	rl.ClearBackground(rl.White)
 
 	if !g.pause {
-		// Draw player
-		rl.DrawRectangle(
-			int32(g.player.Position.X-g.player.Size.X/2),
-			int32(g.player.Position.Y-g.player.Size.Y/2),
-			int32(g.player.Size.X),
-			int32(g.player.Size.X), rl.DarkPurple,
-		)
-
-		// Draw enemy
-		rl.DrawCircleV(
-			g.enemy.Position,
-			25,
-			rl.DarkGreen,
-		)
+		g.player.Draw()
+		g.enemy.Draw()
 
 		// Draw each projectile
 		for _, proj := range projectiles {
 			if proj.Spawned {
-				rl.DrawCircleV(proj.Position, 5, rl.Red)
+				proj.Draw()
 			}
 		}
 	}
