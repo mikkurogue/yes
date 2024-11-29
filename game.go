@@ -22,12 +22,18 @@ func NewGame() (g Game) {
 }
 
 func (g *Game) Init() {
-	g.player.Position = rl.Vector2{float32(ScreenWidth / 2), float32(ScreenHeight * 7 / 8)}
-	g.player.Size = rl.Vector2{float32(ScreenWidth / 10), 20}
+	g.player.Spawn()
 }
 
 func (g *Game) Update() {
 	if !g.pause {
+
+		// implement pause logic somehow
+
+		if rl.IsKeyPressed(rl.KeyP) {
+			g.pause = !g.pause
+		}
+
 		g.player.Move()
 	}
 }
@@ -41,7 +47,7 @@ func (g *Game) Draw() {
 			int32(g.player.Position.X-g.player.Size.X/2),
 			int32(g.player.Position.Y-g.player.Size.Y/2),
 			int32(g.player.Size.X),
-			int32(g.player.Size.Y), rl.Black,
+			int32(g.player.Size.X), rl.Black,
 		)
 	}
 

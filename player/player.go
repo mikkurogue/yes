@@ -1,17 +1,26 @@
 package player
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
+
+const (
+	ScreenWidth  = 800
+	ScreenHeight = 640
+)
 
 type Player struct {
 	Position, Size rl.Vector2
 	Life           int
 }
 
-func Spawn() {}
+func (p *Player) Spawn() {
+	p.Position = rl.Vector2{float32(ScreenWidth / 2), float32(ScreenHeight * 7 / 8)}
+	p.Size = rl.Vector2{float32(ScreenWidth / 10), 20}
+
+}
 
 func (p *Player) Move() {
-
-	// implement pause logic somehow
 
 	if rl.IsKeyDown(rl.KeyLeft) || rl.IsKeyDown(rl.KeyA) {
 		p.Position.X -= 5
