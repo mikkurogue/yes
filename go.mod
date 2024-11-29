@@ -2,7 +2,10 @@ module gengine
 
 go 1.22.2
 
+require github.com/gen2brain/raylib-go/raylib v0.0.0-20241117153000-01864c04b849
+
 require (
-	github.com/go-gl/gl v0.0.0-20231021071112-07e5d0ea2e71
-	github.com/go-gl/glfw v0.0.0-20240506104042-037f3cc74f2a
+	github.com/ebitengine/purego v0.8.1 // indirect
+	golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f // indirect
+	golang.org/x/sys v0.27.0 // indirect
 )
