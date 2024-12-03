@@ -8,6 +8,7 @@ import (
 )
 
 type Enemy struct {
+	Spawned        bool
 	Health         float32
 	Position, Size rl.Vector2
 }
@@ -25,6 +26,7 @@ func (e *Enemy) Draw() {
 }
 
 func (e *Enemy) Spawn() {
+	e.Spawned = true
 	e.Health = 100.0
 
 	e.Position = rl.Vector2{
@@ -34,6 +36,17 @@ func (e *Enemy) Spawn() {
 	e.Size = rl.Vector2{
 		X: float32(constants.ScreenWidth / 10),
 		Y: 20.0,
+	}
+
+}
+
+func (e *Enemy) TakeDamage(amount float32) {
+
+	e.Health -= amount
+
+	if e.Health <= 0 {
+		e.Health = 0
+		e.Spawned = false
 	}
 
 }
