@@ -3,6 +3,7 @@ package main
 import (
 	"gengine/constants"
 	"gengine/enemy"
+	"gengine/engine/collision"
 	"gengine/player"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -13,7 +14,21 @@ type Game struct {
 	player      player.Player
 	enemies     []enemy.Enemy
 	projectiles []player.Projectile
-	camera      rl.Camera2D
+	camera      player.Camera
+}
+
+var staticObjects = []collision.RigidBody2D{
+	{
+		Position: rl.Vector2{
+			X: 300,
+			Y: 300,
+		},
+		Size: rl.Vector2{
+			X: 50,
+			Y: 50,
+		},
+		IsStatic: true,
+	},
 }
 
 func NewGame() (g Game) {
@@ -27,12 +42,7 @@ func (g *Game) Init() {
 	e.Spawn()
 	g.enemies = append(g.enemies, e)
 
-	g.camera = rl.Camera2D{
-		Offset:   rl.NewVector2(float32(constants.ScreenWidth/2), constants.ScreenHeight/2),
-		Target:   g.player.Position,
-		Rotation: 0.0,
-		Zoom:     1.0,
-	}
+	g.camera.AttachNewCamera(g.player)
 }
 
 func (g *Game) Update() {
@@ -46,8 +56,8 @@ func (g *Game) Update() {
 		return
 	}
 
-	g.player.Update()
-	g.camera.Target = g.player.Position
+	g.player.Update(staticObjects, deltaTime)
+	g.camera.SetTarget(g.player)
 
 	if rl.IsKeyPressed(rl.KeySpace) {
 		projectile := player.Projectile{}
@@ -59,9 +69,9 @@ func (g *Game) Update() {
 		g.projectiles[i].Move(deltaTime)
 		projectileRemoved := false
 
-		for _, e := range g.enemies {
-			if g.projectiles[i].CheckCollision(&e) {
-				e.TakeDamage(50)
+		for j := 0; j < len(g.enemies); j++ {
+			if g.projectiles[i].CheckCollision(&g.enemies[j]) {
+				g.enemies[j].TakeDamage(50)
 				g.projectiles[i].Spawned = false
 				projectileRemoved = true // flag
 				break                    // Stop checking further enemies for this projectile
@@ -90,8 +100,18 @@ func (g *Game) Draw() {
 	rl.ClearBackground(rl.White)
 
 	if !g.pause {
-		rl.BeginMode2D(g.camera)
+		g.camera.Init()
 		g.player.Draw()
+
+		for _, obj := range staticObjects {
+			rl.DrawRectangle(
+				int32(obj.Position.X),
+				int32(obj.Position.Y),
+				int32(obj.Size.X),
+				int32(obj.Size.Y),
+				rl.Blue,
+			)
+		}
 
 		for _, e := range g.enemies {
 			e.Draw()

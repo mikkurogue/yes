@@ -2,13 +2,14 @@ package player
 
 import (
 	"gengine/constants"
+	"gengine/engine/collision"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 type Player struct {
-	Position, Size rl.Vector2
-	Health         int
+	collision.RigidBody2D
+	Health int
 }
 
 func (p *Player) Spawn() {
@@ -23,10 +24,13 @@ func (p *Player) Spawn() {
 		X: float32(constants.ScreenWidth / 10),
 		Y: 20.0,
 	}
+	p.Velocity = rl.Vector2{}
+	p.IsStatic = false
 }
 
-func (p *Player) Update() {
+func (p *Player) Update(allObjects []collision.RigidBody2D, dt float32) {
 	p.Move()
+	p.UpdatePhysics(allObjects, dt)
 }
 
 func (p *Player) Draw() {
@@ -35,7 +39,8 @@ func (p *Player) Draw() {
 		int32(p.Position.X-p.Size.X/2),
 		int32(p.Position.Y-p.Size.Y/2),
 		int32(p.Size.X),
-		int32(p.Size.X), rl.DarkPurple,
+		int32(p.Size.X),
+		rl.DarkPurple,
 	)
 
 }
@@ -43,18 +48,33 @@ func (p *Player) Draw() {
 func (p *Player) Move() {
 
 	if rl.IsKeyDown(rl.KeyLeft) || rl.IsKeyDown(rl.KeyA) {
-		p.Position.X -= 5
+		p.Velocity.X -= 5
 	}
 
 	if rl.IsKeyDown(rl.KeyRight) || rl.IsKeyDown(rl.KeyD) {
-		p.Position.X += 5
+		p.Velocity.X += 5
 	}
 
 	if rl.IsKeyDown(rl.KeyUp) || rl.IsKeyDown(rl.KeyW) {
-		p.Position.Y -= 5
+		p.Velocity.Y -= 5
 	}
 
 	if rl.IsKeyDown(rl.KeyDown) || rl.IsKeyDown(rl.KeyS) {
-		p.Position.Y += 5
+		p.Velocity.Y += 5
+	}
+}
+
+func (p *Player) UpdatePhysics(allObjects []collision.RigidBody2D, dt float32) {
+	p.Position.X += p.Velocity.X * dt
+	p.Position.Y += p.Velocity.Y * dt
+
+	for _, obj := range allObjects {
+		if &p.RigidBody2D == &obj || obj.IsStatic == false {
+			continue
+		}
+
+		if collision.CheckCollision(p.RigidBody2D, obj) {
+			collision.ResolveCollision(&p.RigidBody2D, &obj)
+		}
 	}
 }

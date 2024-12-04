@@ -37,16 +37,13 @@ func (e *Enemy) Spawn() {
 		X: float32(constants.ScreenWidth / 10),
 		Y: 20.0,
 	}
-
 }
 
 func (e *Enemy) TakeDamage(amount float32) {
-
 	e.Health -= amount
 
 	if e.Health <= 0 {
 		e.Health = 0
 		e.Spawned = false
 	}
-
 }

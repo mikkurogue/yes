@@ -16,7 +16,7 @@ type Projectile struct {
 
 func (p *Projectile) Init(position, direction rl.Vector2) {
 	p.Position = position
-	p.Speed = 5.0 // Set a default speed
+	p.Speed = 15.0 // Set a default speed
 	p.Direction = rl.Vector2Normalize(direction)
 	p.Spawned = true
 	p.Lifetime = 2.0        // spawn for 2 seconds
