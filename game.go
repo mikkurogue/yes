@@ -13,6 +13,7 @@ type Game struct {
 	player      player.Player
 	enemies     []enemy.Enemy
 	projectiles []player.Projectile
+	camera      rl.Camera2D
 }
 
 func NewGame() (g Game) {
@@ -22,16 +23,16 @@ func NewGame() (g Game) {
 
 func (g *Game) Init() {
 	g.player.Spawn()
-
 	e := enemy.Enemy{}
 	e.Spawn()
 	g.enemies = append(g.enemies, e)
 
-	// for i := 0; i < 5; i++ { // Example: Spawn 5 enemies
-	// 	newEnemy := enemy.Enemy{}
-	// 	newEnemy.Spawn()
-	// 	g.enemies = append(g.enemies, newEnemy)
-	// }
+	g.camera = rl.Camera2D{
+		Offset:   rl.NewVector2(float32(constants.ScreenWidth/2), constants.ScreenHeight/2),
+		Target:   g.player.Position,
+		Rotation: 0.0,
+		Zoom:     1.0,
+	}
 }
 
 func (g *Game) Update() {
@@ -46,6 +47,7 @@ func (g *Game) Update() {
 	}
 
 	g.player.Update()
+	g.camera.Target = g.player.Position
 
 	if rl.IsKeyPressed(rl.KeySpace) {
 		projectile := player.Projectile{}
@@ -88,6 +90,7 @@ func (g *Game) Draw() {
 	rl.ClearBackground(rl.White)
 
 	if !g.pause {
+		rl.BeginMode2D(g.camera)
 		g.player.Draw()
 
 		for _, e := range g.enemies {
@@ -99,6 +102,8 @@ func (g *Game) Draw() {
 				p.Draw()
 			}
 		}
+
+		rl.EndMode2D()
 	}
 
 	if g.pause {
