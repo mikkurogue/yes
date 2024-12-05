@@ -104,6 +104,7 @@ func (g *Game) Draw() {
 		g.player.Draw()
 
 		for _, obj := range staticObjects {
+			DebugDreawCollisionBox(obj, rl.Red)
 			rl.DrawRectangle(
 				int32(obj.Position.X),
 				int32(obj.Position.Y),
@@ -131,4 +132,14 @@ func (g *Game) Draw() {
 	}
 
 	rl.EndDrawing()
+}
+
+func DebugDreawCollisionBox(rb collision.RigidBody2D, color rl.Color) {
+	rl.DrawRectangleLines(
+		int32(rb.Position.X),
+		int32(rb.Position.Y),
+		int32(rb.Size.X),
+		int32(rb.Size.Y),
+		color,
+	)
 }
